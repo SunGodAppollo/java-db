@@ -25,7 +25,6 @@ public class DB {
 	// 条件查询
 	public List<Map<String, String>> select() {
 		// 组成SQL语句
-		//connection = JdbcConnection.getConnection();
 		String sql = "select * FROM " + table;
 		System.out.println(sql);
 		return selectBySQL(sql);
@@ -203,7 +202,7 @@ public class DB {
 		try {
 			resultSet.close();
 			statement.close();
-			connection.close();
+			//connection.close();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
