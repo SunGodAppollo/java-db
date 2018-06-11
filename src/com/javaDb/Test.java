@@ -10,6 +10,7 @@ public class Test {
             DB db=new DB("user");
             List<Map<String, String>> selectrelt = db.select();
             DbTool.printRelt(selectrelt);
+            
 	}
 
 }
