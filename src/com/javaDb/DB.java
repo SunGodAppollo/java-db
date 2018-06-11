@@ -12,21 +12,20 @@ import java.util.List;
 import java.util.Map;
 
 public class DB {
-	protected static Connection connection = null;
-	protected static Statement statement = null;
-	protected static ResultSet resultSet = null;
-	protected static PreparedStatement preparedStatement = null;
+	protected  Connection connection = null;
+	protected  Statement statement = null;
+	protected  ResultSet resultSet = null;
+	protected  PreparedStatement preparedStatement = null;
 
 	protected String table;
 
 	protected DB(String table) {
 		this.table = "`" + table + "`";
 	}
-	JdbcConnection con = new JdbcConnection();
 	// 条件查询
 	public List<Map<String, String>> select() {
 		// 组成SQL语句
-		this.connection = con.getCon();
+		//connection = JdbcConnection.getConnection();
 		String sql = "select * FROM " + table;
 		System.out.println(sql);
 		return selectBySQL(sql);
@@ -74,6 +73,12 @@ public class DB {
 			}
 		}
 		return CURD0(sql);
+	}
+	//删除
+	
+	public int delete(int no){
+		String sql = "delete from " + table +"where no = "+no;
+		return CURD(sql);
 	}
 	public int edit(String set,String Where) {
 		// 组成SQL语句
@@ -148,24 +153,40 @@ public class DB {
 		return lists;
 
 	}
-
+	//sql删除
+	public String deletebyno() {
+		
+		
+		return "";
+	}
+	
 	// 得到Statement
 	protected Statement getStatement() {
-		if (connection == null) {
-			connection = JdbcConnection.getConnection();
+		try {
+			if (connection == null||connection.isClosed()) {
+				connection = JdbcConnection.getConnection();
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		try {
-			return connection.createStatement();
+		  statement =  connection.createStatement();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return statement;
 	}
 	// 得到PreparedStatement
 	protected PreparedStatement getPreparedStatement(String SQL) {
-		if (connection == null) {
-			connection = JdbcConnection.getConnection();
+		try {
+			if (connection == null||connection.isClosed()) {
+				connection = JdbcConnection.getConnection();
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		try {
 			return connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
@@ -182,9 +203,7 @@ public class DB {
 		try {
 			resultSet.close();
 			statement.close();
-			if(connection!=null) {
-				connection.close();
-			}
+			connection.close();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
