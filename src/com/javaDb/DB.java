@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class DB {
 	protected static  Connection connection = null;
@@ -56,22 +57,41 @@ public class DB {
 		System.out.println(sql);
 		return selectBySQL(sql);
 	}
-    //添加
-	public int add(String[] data) {
+
+	/**
+	 * 添加
+	 * 样例
+	 *  DB db=new DB("user");
+	 *  Map<String, String> insertmap=new HashMap<>();
+            insertmap.put("A", "1");
+            insertmap.put("B", "2");
+            insertmap.put("C", "3");
+            insertmap.put("D", "4");
+         db.add(insertmap);
+	 * @param data
+	 * @return int 添加影响的行数
+	 */
+	public int add(Map<String, String> insertMap) {
 		// 组成SQL语句
 		String sql = "INSERT INTO " + table;
-		if (data != null) {
-			sql += " (`bid`, `uid`, `start`) VALUES (";
-			for (int i = 0; i < data.length; i++) {
-				sql += data[i];
-				if (i < data.length - 1) {
-					sql += ",";
-				}else {
-					sql += ")";
-				}
-			}
+		String attr="(";//存放要添加的字段
+		String VALUES="(";//存放字段对应的值
+		
+		for (Entry<String, String> insert : insertMap.entrySet()) {
+			attr+="`"+insert.getKey()+"`,";
+			VALUES+="`"+insert.getValue()+"`,";
 		}
-		return CURD0(sql);
+		//去除最后的逗号
+		attr=attr.substring(0,attr.length()-1);
+		VALUES=VALUES.substring(0,VALUES.length()-1);
+		//添加最后的括号
+		attr+=")";
+		VALUES+=")";
+		//组装成最后的sql
+		sql+=" "+attr+" VALUES"+VALUES;
+		
+		System.out.println(sql);
+	  return CURD(sql);
 	}
 	//删除
 	
@@ -87,7 +107,12 @@ public class DB {
 		return CURD(sql);
 	}
 	
-	//CURD
+
+	/**
+	 * 对数据库的增删改操作
+	 * @param SQL 需要执行的sql语句
+	 * @return
+	 */
 	public int CURD(String SQL) {
 		System.out.println();
 		int return_int=0;
