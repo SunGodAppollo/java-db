@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 public class DB {
-	protected  Connection connection = null;
-	protected  Statement statement = null;
-	protected  ResultSet resultSet = null;
-	protected  PreparedStatement preparedStatement = null;
+	protected static  Connection connection = null;
+	protected static  Statement statement = null;
+	protected static  ResultSet resultSet = null;
+	protected static  PreparedStatement preparedStatement = null;
 
-	protected String table;
+	protected  String table;
 
 	protected DB(String table) {
 		this.table = "`" + table + "`";
