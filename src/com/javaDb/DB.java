@@ -19,7 +19,7 @@ public class DB {
 
 	protected String table;
 
-	protected DB(String table) {
+	public DB(String table) {
 		this.table = "`" + table + "`";
 	}
 
